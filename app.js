@@ -32,4 +32,7 @@ const blogRoutes = require("./routes/blog");
 app.use("/user", userRoutes);
 app.use("/blog", blogRoutes);
 
+app.get("/", function (req, res) {
+    return res.send("Hello World");
+});
 module.exports = app;
