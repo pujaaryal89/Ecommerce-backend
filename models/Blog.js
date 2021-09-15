@@ -20,5 +20,6 @@ blogSchema.index({
 });
 
 const Blog = mongoose.model("blog", blogSchema);
+Blog.createIndexes();
 
 module.exports = Blog;

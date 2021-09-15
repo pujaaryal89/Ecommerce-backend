@@ -1,3 +1,4 @@
+const { json } = require("express");
 const Blog = require("../models/Blog");
 
 exports.createBlog = async (req, res) => {
@@ -13,7 +14,9 @@ exports.createBlog = async (req, res) => {
 exports.listBlog = async (req, res) => {
     try {
         const blog = await Blog.find({});
-        return res.status(200).json({ status: "success", blog });
+        return res
+            .status(200)
+            .json({ status: "success", blog, length: blog.length });
     } catch (err) {
         return res.status(500).json({ status: "error", err });
     }
@@ -45,6 +48,20 @@ exports.deleteBlog = async (req, res) => {
         const blog = await Blog.findOneAndDelete({ _id: req.body.id });
         return res.status(200).json({ status: "success", blog });
     } catch (err) {
+        return res.status(500).json({ status: "error", err });
+    }
+};
+
+exports.searchBlog = async (req, res) => {
+    try {
+        const blog = await Blog.find(
+            { $text: { $search: req.query.keyword, $caseSensitive: false } },
+            { score: { $meta: "textScore" } }
+        ).sort({ score: { $meta: "textScore" } });
+        return res.status(200).json({ status: "success", blog });
+    } catch (err) {
+        console.log(err);
+
         return res.status(500).json({ status: "error", err });
     }
 };
