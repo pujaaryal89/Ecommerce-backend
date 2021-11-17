@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 
 exports.registration = async (req, res) => {
     try {
-        const { username, email, password, confirm_password } = req.body;
-        if (!username || !email || !password || !confirm_password) {
+        const { username, email, password, confirm_password, role } = req.body;
+        if (!username || !email || !password || !confirm_password || !role) {
             return res.status(400).send("Please fill all the field");
         }
         if (password !== confirm_password) {
@@ -20,6 +20,7 @@ exports.registration = async (req, res) => {
                 email,
                 password,
                 confirm_password,
+                role,
             });
         }
         res.status(200).json({ status: "User registered succesfully", user });
@@ -104,3 +105,16 @@ exports.profile = async (req, res) => {
         res.status(500).json({ status: "error", error });
     }
 };
+
+// foundSubCat.filter((e) => {
+//     category.some((element) => {
+//         if (e.parent && element._id == e.parent.toString()) {
+//             element.subCat.push({
+//                 _id: e._id,
+//                 name: e.name,
+//                 subCat: [],
+//             });
+//         } else {
+//         }
+//     });
+// });
