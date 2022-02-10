@@ -11,46 +11,39 @@ exports.addToCart = async (req, res) => {
             return res.status(404).json({ message: "Not found" });
         }
 
-        const isProductInCart = await Cart.findOne({
+        const cart = await Cart.findOne({
             user: user_id,
         });
-        if (isProductInCart) {
-            // isProductInCart = isProductInCart.toObject(); //conversion herne
-            let updatedItems = isProductInCart.items.map((element) => {
-                const elementSellerId = element.seller.toString();
-                const productSellerId = product_detail.seller.toString();
-                if (elementSellerId == productSellerId) {
-                    const isSameInCart = element.item.some(
-                        (e) =>
-                            e.productId.toString() ==
-                            product_detail._id.toString()
-                    );
-                    if (!isSameInCart) {
-                        element.item.push({
-                            quantity,
-                            productId: product_detail._id,
-                        });
-                    }
-                    return element;
-                } else {
-                    return {
-                        seller: product_detail.seller,
-                        item: [
-                            {
-                                quantity,
-                                productId: product_detail._id,
-                            },
-                        ],
-                    };
+        if (cart) {
+            const seller_list = cart.items.map((item) =>
+                item.seller.toString()
+            );
+            const seller_index = seller_list.findIndex(
+                (i) => i == product_detail.seller.toString()
+            );
+            if (seller_index > -1) {
+                const thisSellerCart = cart.items[seller_index];
+
+                const isSameInCart = thisSellerCart.item.some(
+                    (e) =>
+                        e.productId.toString() == product_detail._id.toString()
+                );
+                if (!isSameInCart) {
+                    thisSellerCart.item.push({
+                        quantity,
+                        productId: product_detail._id,
+                    });
                 }
-            });
+            } else {
+                cart.items.push({
+                    seller: product_detail.seller,
+                    item: [{ quantity, productId: product_detail._id }],
+                });
+            }
 
-            isProductInCart.items = updatedItems;
-            await isProductInCart.save();
+            await cart.save();
 
-            return res
-                .status(200)
-                .json({ status: "successful", isProductInCart });
+            return res.status(200).json({ status: "successful", cart });
         } else {
             const cart = await Cart.create({
                 user: user_id,
@@ -59,7 +52,7 @@ exports.addToCart = async (req, res) => {
                         seller: product_detail.seller,
                         item: [
                             {
-                                quantity: quantity,
+                                quantity,
                                 productId: product_id,
                             },
                         ],
@@ -131,6 +124,22 @@ exports.deleteCartProduct = async (req, res) => {
                     .status(200)
                     .json({ message: "successfully deleted", userCart });
             }
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "error", err });
+    }
+};
+
+exports.checkoutCart = async (req, res) => {
+    try {
+        const { id } = req.body;
+        if (req.body && req.body.id) {
+            let getCartItem = await Cart.findOne({ _id: id });
+            if (!getCartItem) {
+                return res.status(401).json({ message: "Notfound" });
+            }
+            return res.status(200).json({ message: "Cart item", getCartItem });
         }
     } catch (err) {
         console.log(err);

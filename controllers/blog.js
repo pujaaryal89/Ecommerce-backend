@@ -24,7 +24,7 @@ exports.listBlog = async (req, res) => {
 
 exports.detailBlog = async (req, res) => {
     try {
-        const blog = await Blog.findById(req.body.id);
+        const blog = await Blog.findById(req.params.id);
         return res.status(200).json({ status: "success", blog });
     } catch (err) {
         return res.status(500).json({ status: "error", err });
@@ -33,11 +33,14 @@ exports.detailBlog = async (req, res) => {
 
 exports.updateBlog = async (req, res) => {
     try {
-        const blog = await Blog.findOneAndUpdate(
-            { _id: req.body.id },
-            req.body
-        );
-        return res.status(200).json({ status: "success", blog });
+        const { id, name, description } = req.body;
+        if (req.body) {
+            const blog = await Blog.findOneAndUpdate(
+                { _id: id },
+                { name, description }
+            );
+            return res.status(200).json({ status: "success", blog });
+        }
     } catch (err) {
         return res.status(500).json({ status: "error", err });
     }
@@ -45,7 +48,7 @@ exports.updateBlog = async (req, res) => {
 
 exports.deleteBlog = async (req, res) => {
     try {
-        const blog = await Blog.findOneAndDelete({ _id: req.body.id });
+        const blog = await Blog.findOneAndDelete({ _id: req.params.id });
         return res.status(200).json({ status: "success", blog });
     } catch (err) {
         return res.status(500).json({ status: "error", err });

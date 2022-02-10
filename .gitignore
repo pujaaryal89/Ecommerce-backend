@@ -66,10 +66,10 @@ typings/
 firebase_conf.json
 firebase_config.json
 
-
-#config.env
-config.env 
-.env 
+nv 
 
 #node_module
 /node_modules
+#config.env
+config.env 
+.e

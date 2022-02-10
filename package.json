@@ -5,23 +5,32 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node server.js"
+        "start": "nodemon server.js"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "base64-to-image": "^1.0.2",
         "bcryptjs": "^2.4.3",
+        "canvas": "^2.9.0",
         "cors": "^2.8.5",
         "dotenv": "^10.0.0",
         "express": "^4.17.1",
         "express-session": "^1.17.2",
+        "fs": "^0.0.1-security",
+        "jimp": "^0.16.1",
         "jsonwebtoken": "^8.5.1",
-        "mongoose": "^6.0.2",
+        "mongoose": "^6.1.2",
         "morgan": "^1.10.0",
         "multer": "^1.4.3",
-        "nodemon": "^2.0.12",
+        "node-fetch": "^3.2.0",
+        "nodemon": "^2.0.15",
         "slugify": "^1.6.0",
+        "stripe": "^8.195.0",
+        "uid": "^2.0.0",
+        "url-to-image": "^1.0.0",
         "uuid": "^8.3.2",
-        "validator": "^13.6.0"
+        "validator": "^13.6.0",
+        "xlsx": "^0.17.5"
     }
 }

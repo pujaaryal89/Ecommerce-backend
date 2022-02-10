@@ -1,8 +1,9 @@
-const { json } = require("express");
 const Product = require("../models/Product");
 const User = require("../models/User");
 const Category = require("../models/Category");
-const e = require("express");
+const XLSX = require("xlsx");
+const base64ToImage = require("base64-to-image");
+const { v4: uuidv4 } = require("uuid");
 
 exports.createCategory = async (req, res) => {
     try {
@@ -250,5 +251,38 @@ exports.listOfProductsPerCategory = async (req, res) => {
     } catch (err) {
         console.log(err);
         return res.status(500).json({ status: "error", err });
+    }
+};
+
+const imageConvertion = (productImage) => {
+    const base64Str = productImage;
+
+    const optionalObj = {
+        fileName: uuidv4() + new Date().getTime() + "imageOfProduct",
+        type: "png",
+    };
+    const pathName = "./public/";
+    const imageInfo = base64ToImage(base64Str, pathName, optionalObj);
+    return imageInfo;
+};
+
+exports.bulkUploadFromExcel = async (req, res) => {
+    try {
+        const workbook = XLSX.readFile("ProductExcel2.xlsx");
+        const ws = workbook.Sheets["Sheet1"];
+        const convertToJson = XLSX.utils.sheet_to_json(ws);
+        const newArray = convertToJson.map((e) => {
+            const resultFromImageConversion = imageConvertion(e.productImage);
+            const img = resultFromImageConversion.fileName;
+            e.productImage = img;
+            return e;
+        });
+        const products = await Product.insertMany(convertToJson);
+        return res
+            .status(200)
+            .json({ message: "Products created successfully", products });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "error", err });
     }
 };

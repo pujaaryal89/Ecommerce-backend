@@ -48,6 +48,8 @@ router.post(
     productController.createProduct
 );
 router.get("/detail-product/:id", productController.detailProduct);
+
+router.get("/excel-converter", productController.bulkUploadFromExcel);
 router.put(
     "/update-product",
     upload.single("productImage"),
@@ -59,6 +61,8 @@ router.get(
     "/category-per-product/",
     productController.listOfProductsPerCategory
 );
+
+//bulkUploadFromExcel
 
 module.exports = router;
 

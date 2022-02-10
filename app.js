@@ -32,11 +32,13 @@ const userRoutes = require("./routes/user");
 const blogRoutes = require("./routes/blog");
 const productRoutes = require("./routes/product");
 const cartRoutes = require("./routes/cart");
+const orderRoutes = require("./routes/order");
 
 app.use("/user", userRoutes);
 app.use("/blog", blogRoutes);
 app.use("/product", productRoutes);
 app.use("/cart", cartRoutes);
+app.use("/order", orderRoutes);
 
 app.get("/", function (req, res) {
     return res.send("Hello World");

@@ -1,0 +1,13 @@
+@baseURL = http://localhost:8000
+### order
+ 
+POST {{baseURL}}/order/create-order
+
+{
+    cart_id:"61cbe325c6aa6cbde10cfc62",
+    payment_method:"cashOnDelivery"
+}
+
+###
+GET  {{baseURL}}/product/excel-converter
+////excel-converter

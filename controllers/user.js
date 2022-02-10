@@ -63,7 +63,6 @@ exports.registration = async (req, res) => {
 // };
 
 exports.login = async (req, res) => {
-    // console.log({ " req is": req });
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
@@ -76,10 +75,7 @@ exports.login = async (req, res) => {
                     { _id: user._id },
                     process.env.TOKEN_SECRET
                 );
-                // if (!user.token) {
-                //     user.token = token;
-                //     await user.save();
-                // }
+
                 res.status(200).json({ token, user });
             } else {
                 res.send("Wrong username or password.");
@@ -105,16 +101,3 @@ exports.profile = async (req, res) => {
         res.status(500).json({ status: "error", error });
     }
 };
-
-// foundSubCat.filter((e) => {
-//     category.some((element) => {
-//         if (e.parent && element._id == e.parent.toString()) {
-//             element.subCat.push({
-//                 _id: e._id,
-//                 name: e.name,
-//                 subCat: [],
-//             });
-//         } else {
-//         }
-//     });
-// });
